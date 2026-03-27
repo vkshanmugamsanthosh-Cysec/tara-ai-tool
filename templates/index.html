@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Automotive TARA Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #080f1a; color: #d0dde8; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        .header {
+            background: #0a1628;
+            padding: 14px 28px;
+            border-bottom: 1px solid #152640;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-title { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; color: #e8f0f8; }
+        .header-badge {
+            font-size: 10px;
+            background: #0e3a6e;
+            color: #5ba3f5;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #1a5099;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 48px);
+        }
+
+        .sidebar {
+            background: #0a1628;
+            border-right: 1px solid #152640;
+            padding: 20px;
+        }
+
+        .main { padding: 20px; }
+
+        .card {
+            background: #0d1e35;
+            border: 1px solid #152640;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 11px;
+            color: #4a7aaa;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        label { font-size: 12px; color: #6a94b8; display: block; margin-bottom: 4px; margin-top: 12px; }
+
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            background: #0f2540;
+            border: 1px solid #1e3d5e;
+            border-radius: 5px;
+            color: #c8dae8;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 10px;
+            margin-top: 14px;
+            background: #0e5fc4;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-primary:hover { background: #0a4ea8; }
+
+        .btn-ai {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: linear-gradient(135deg, #1a3a6e, #0e2d5a);
+            border: 1px solid #2a5a9e;
+            border-radius: 5px;
+            color: #7ab8f5;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-ai:hover { background: linear-gradient(135deg, #1e4480, #122e68); }
+
+        .btn-outline {
+            width: 100%;
+            padding: 9px;
+            margin-top: 8px;
+            background: transparent;
+            border: 1px solid #1e3d5e;
+            border-radius: 5px;
+            color: #5a8ab0;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-outline:hover { background: #0f2540; color: #8ab8d8; }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .risk-box { padding: 14px 8px; border-radius: 6px; text-align: center; }
+        .risk-box .number { font-size: 26px; font-weight: 700; }
+        .risk-box .label { font-size: 10px; margin-top: 3px; letter-spacing: 1px; opacity: 0.8; }
+        .high  { background: #2a0808; border: 1px solid #6b1010; }
+        .med   { background: #271500; border: 1px solid #7a3d00; }
+        .low   { background: #061a0e; border: 1px solid #0e4a20; }
+
+        /* AI Threats Table */
+        .ai-section { margin-top: 4px; }
+
+        .threat-card {
+            background: #091525;
+            border: 1px solid #152640;
+            border-left: 3px solid #1a6fc4;
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .threat-card.high-risk { border-left-color: #c0392b; }
+        .threat-card.medium-risk { border-left-color: #e67e22; }
+        .threat-card.low-risk { border-left-color: #27ae60; }
+
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .threat-asset { font-size: 13px; font-weight: 600; color: #e0eaf4; }
+        .threat-stride {
+            font-size: 11px;
+            background: #0e2d5a;
+            color: #5ba3f5;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .threat-row { margin-bottom: 6px; }
+        .threat-label { font-size: 10px; color: #4a7aaa; text-transform: uppercase; letter-spacing: 0.8px; }
+        .threat-value { font-size: 12px; color: #b0c8de; margin-top: 2px; line-height: 1.5; }
+
+        .risk-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .badge-high { background: #5a1010; color: #ff6b6b; }
+        .badge-medium { background: #4a2800; color: #ffaa44; }
+        .badge-low { background: #0a2e14; color: #44cc77; }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            color: #4a7aaa;
+            font-size: 13px;
+        }
+        .loading.show { display: block; }
+
+        .footer {
+            font-size: 10px;
+            color: #1e3d5e;
+            text-align: center;
+            margin-top: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #2a4a6a;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-title">Automotive Cybersecurity — TARA Dashboard</div>
+    <div class="header-badge">ISO/SAE 21434</div>
+    <div class="header-badge" style="background:#0e2d1a; color:#44cc77; border-color:#1a5a2a;">AI Powered</div>
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="card">
+            <div class="card-title">Standard TARA</div>
+            <form method="post" action="/generate">
+                <label>ECU</label>
+                <select name="ecu">
+                    <option>ESCL</option>
+                    <option>BMS</option>
+                    <option>TCU</option>
+                    <option>ADAS</option>
+                    <option>Gateway</option>
+                    <option>Infotainment</option>
+                </select>
+                <label>Interface</label>
+                <select name="interface">
+                    <option>CAN</option>
+                    <option>OTA</option>
+                    <option>Bluetooth</option>
+                </select>
+                <button type="submit" class="btn-primary">Generate TARA</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-title">AI Analysis</div>
+            <form method="post" action="/ai_analyze" id="aiForm">
+                <label>ECU</label>
+                <select name="ecu">
+                    <option>ESCL</option>
+                    <option>BMS</option>
+                    <option>TCU</option>
+                    <option>ADAS</option>
+                    <option>Gateway</option>
+                    <option>Infotainment</option>
+                </select>
+                <label>Interface</label>
+                <select name="interface">
+                    <option>CAN</option>
+                    <option>OTA</option>
+                    <option>Bluetooth</option>
+                </select>
+                <button type="submit" class="btn-ai">AI Analyze</button>
+            </form>
+            <div class="loading" id="aiLoader">
+                Generating AI threat scenarios...
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Export</div>
+            <a href="/download_excel" style="text-decoration:none;">
+                <button class="btn-outline">Download Excel</button>
+            </a>
+            <a href="/download_pdf" style="text-decoration:none;">
+                <button class="btn-outline">Download PDF</button>
+            </a>
+        </div>
+
+        <div class="footer">Cybersecurity Engineering Platform v1.0</div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main">
+
+        <div class="card">
+            <div class="card-title">Risk Summary</div>
+            <div class="risk-grid">
+                <div class="risk-box high">
+                    <div class="number">{{ summary.get('High', 0) }}</div>
+                    <div class="label">HIGH</div>
+                </div>
+                <div class="risk-box med">
+                    <div class="number">{{ summary.get('Medium', 0) }}</div>
+                    <div class="label">MEDIUM</div>
+                </div>
+                <div class="risk-box low">
+                    <div class="number">{{ summary.get('Low', 0) }}</div>
+                    <div class="label">LOW</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">STRIDE Threat Distribution</div>
+            <canvas id="strideChart" height="80"></canvas>
+        </div>
+
+        <div class="card">
+            <div class="card-title">AI Generated Threat Scenarios</div>
+            <div class="ai-section">
+                {% if ai_threats %}
+                    {% for t in ai_threats %}
+                    <div class="threat-card {{ t.risk_level | lower }}-risk">
+                        <div class="threat-header">
+                            <div class="threat-asset">{{ t.asset }}</div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <div class="threat-stride">{{ t.stride }}</div>
+                                <span class="risk-badge badge-{{ t.risk_level | lower }}">{{ t.risk_level }}</span>
+                            </div>
+                        </div>
+                        <div class="threat-row">
+                            <div class="threat-label">Threat Scenario</div>
+                            <div class="threat-value">{{ t.threat_scenario }}</div>
+                        </div>
+                        <div class="threat-row">
+                            <div class="threat-label">Attack Path</div>
+                            <div class="threat-value">{{ t.attack_path }}</div>
+                        </div>
+                        <div class="threat-row">
+                            <div class="threat-label">Mitigation</div>
+                            <div class="threat-value">{{ t.mitigation }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        Click "AI Analyze" to generate intelligent threat scenarios using Claude AI
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const strideData = {{ stride | tojson | safe }};
+const labels = Object.keys(strideData);
+const values = Object.values(strideData);
+
+if (labels.length > 0) {
+    new Chart(document.getElementById("strideChart"), {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Threat Count",
+                data: values,
+                backgroundColor: ["#c0392b","#e67e22","#2980b9","#27ae60","#8e44ad"],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: "#4a7aaa" }, grid: { color: "#0f2540" } },
+                y: { ticks: { color: "#4a7aaa" }, grid: { color: "#0f2540" } }
+            }
+        }
+    });
+}
+
+document.getElementById("aiForm").addEventListener("submit", function() {
+    document.getElementById("aiLoader").classList.add("show");
+});
+</script>
+
+</body>
+</html>

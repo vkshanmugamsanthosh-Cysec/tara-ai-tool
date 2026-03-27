@@ -1,0 +1,114 @@
+{
+  "ESCL": [
+    {
+      "name": "Unlock command",
+      "type": "Function",
+      "security_properties": ["Integrity"]
+    },
+    {
+      "name": "Lock command",
+      "type": "Function",
+      "security_properties": ["Integrity"]
+    },
+    {
+      "name": "ECU firmware",
+      "type": "Software",
+      "security_properties": ["Integrity", "Availability"]
+    },
+    {
+      "name": "Bootloader",
+      "type": "Software",
+      "security_properties": ["Integrity", "Availability"]
+    },
+    {
+      "name": "Operating system kernel",
+      "type": "Software",
+      "security_properties": ["Integrity", "Availability"]
+    },
+    {
+      "name": "CAN messages",
+      "type": "Communication",
+      "security_properties": ["Integrity", "Availability"]
+    },
+    {
+      "name": "Diagnostic access",
+      "type": "Service",
+      "security_properties": ["Availability"]
+    },
+    {
+      "name": "Security access service",
+      "type": "Service",
+      "security_properties": ["Integrity", "Availability"]
+    },
+    {
+      "name": "Security keys",
+      "type": "Credential",
+      "security_properties": ["Confidentiality", "Integrity"]
+    },
+    {
+      "name": "Secure boot configuration",
+      "type": "Security Mechanism",
+      "security_properties": ["Integrity"]
+    }
+  ],
+
+  "BMS": [
+    {
+      "name": "Battery firmware",
+      "type": "Software",
+      "security_properties": ["Integrity", "Availability"]
+    },
+    {
+      "name": "Voltage data",
+      "type": "Data",
+      "security_properties": ["Integrity"]
+    },
+    {
+      "name": "CAN messages",
+      "type": "Communication",
+      "security_properties": ["Integrity", "Availability"]
+    }
+  ],
+
+  "TCU": [
+    {
+      "name": "Telematics firmware",
+      "type": "Software",
+      "security_properties": ["Confidentiality", "Integrity"]
+    },
+    {
+      "name": "Cellular interface",
+      "type": "Communication",
+      "security_properties": ["Availability"]
+    }
+  ],
+
+  "ADAS": [
+    {
+      "name": "Sensor data",
+      "type": "Data",
+      "security_properties": ["Integrity"]
+    },
+    {
+      "name": "Camera firmware",
+      "type": "Software",
+      "security_properties": ["Integrity", "Availability"]
+    }
+  ],
+
+  "Gateway": [
+    {
+      "name": "CAN routing",
+      "type": "Communication",
+      "security_properties": ["Integrity"]
+    }
+  ],
+
+  "Infotainment": [
+    {
+      "name": "User data",
+      "type": "Data",
+      "security_properties": ["Confidentiality"]
+    }
+  ]
+}

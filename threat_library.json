@@ -1,0 +1,28 @@
+{
+    "CAN": [
+      {
+        "threat_id": "TH_CAN_01",
+        "stride": "Spoofing",
+        "description": "CAN message spoofing",
+        "attack_path": "CAN injection via OBD port",
+        "impact": 3
+      },
+      {
+        "threat_id": "TH_CAN_02",
+        "stride": "Denial of Service",
+        "description": "CAN flooding attack",
+        "attack_path": "Continuous CAN frame transmission",
+        "impact": 2
+      }
+    ],
+  
+    "OTA": [
+      {
+        "threat_id": "TH_OTA_01",
+        "stride": "Tampering",
+        "description": "Malicious firmware update",
+        "attack_path": "Compromised OTA server",
+        "impact": 3
+      }
+    ]
+  }

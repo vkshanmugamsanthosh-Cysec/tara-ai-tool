@@ -1,0 +1,23 @@
+# Virtual environment
+venv/
+
+# Generated reports
+tara_report.xlsx
+tara_report.pdf
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyd
+
+# Environment variables
+.env
+config.py
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
