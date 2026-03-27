@@ -144,5 +144,5 @@ CAN, OTA, Bluetooth
 
 Santhosh S — Automotive Cybersecurity Engineer
 
-LinkedIn: linkedin.com/in/santhosh-shanmugamsanthosh
+LinkedIn:  http://linkedin.com/in/santhosh-shanmugamsanthosh 
 
